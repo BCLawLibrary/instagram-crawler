@@ -1,0 +1,150 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #fafafa;
+    margin: 0px;
+    color: rgb(38,38,38);
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 614px 321px;
+    grid-template-rows: auto;
+    grid-template-areas: "main sidebar";
+    max-width: 935px;
+    margin:auto;
+    padding-top: 50px;
+}
+
+/* top bar */
+.top_bar {
+    height: 54px;
+    width: 100%;
+    border-bottom: 1px solid rgb(219,219,219);
+    background-color: white;
+}
+
+.top_bar_content {
+    max-width: 935px;
+    margin: auto;
+}
+
+.page_title {
+    font-family: 'Lobster Two', cursive;
+    line-height: 54px;
+    font-size: 28px;
+}
+
+/* Posts */
+.post_container {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    margin-top: 32px;
+
+}
+
+.post {
+    width: 100%;
+    margin: 10px 0px;
+    font-size: 14px;
+    background-color: white;
+    border: 1px solid rgb(219,219,219);
+}
+
+.post_header {
+    padding: 16px;
+}
+
+.post_header a, .user_info a {
+    text-decoration: none;
+}
+
+.user_icon {
+    width: 32px;
+    margin-right: 16px;
+    float: left;
+}
+
+.username, .caption .username {
+    font-weight: 700;
+    text-decoration: none;
+    color: rgb(38,38,38);
+}
+
+.username:hover, .caption .username:hover {
+    text-decoration: underline;
+}
+
+.subname, .post_count, .footer_content {
+    font-size: 12px;
+    color: rgb(142, 142, 142);
+    text-decoration: none;
+}
+
+img {
+    width: 100%;
+}
+
+.post_caption {
+    padding: 16px;
+}
+
+.caption {
+    margin: 0px;
+}
+
+.timestamp {
+    font-size: 10px;
+    color: rgb(142, 142, 142);
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+.timestamp a {
+    color: rgb(142, 142, 142);
+    text-decoration: none;
+}
+
+/* Account Information */
+.user_info {
+    grid-area: sidebar;
+    margin-top: 42px;
+    margin-left: 28px;
+    font-size: 14px;
+}
+.user_info img {
+    width: 50px;
+    float: left;
+    margin-right: 16px;
+}
+
+.user_info p {
+    margin-top: 10px;
+}
+
+.account_descrip {
+    margin-left: 66px;
+}
+
+.account_descrip a, .caption a {
+    color: #3578e5;
+    text-decoration: none;
+}
+
+/* Footer */
+footer {
+    width: 100%;
+    height: 50px;
+    background-color: white;
+    border-top: 1px solid rgb(219,219,219);
+}
+
+.footer_content {
+    max-width: 935px;
+    line-height: 50px;
+    margin: auto;
+}
