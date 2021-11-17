@@ -8,7 +8,7 @@
  * 
  * Avi Bauer - bauerac@bc.edu
  * created 9/15/20
- * last updated 11/7/20
+ * last updated 11/2/21
  * 
  * Google Sheets API Documentation: https://developers.google.com/sheets/api
  * Instagram Basic Display API Documentation: https://developers.facebook.com/docs/instagram-basic-display-api/
@@ -20,7 +20,7 @@
 // --- 0. PARAMETERS ------------
 
 var googleKey = "INSERT_GOOGLE_SHEETS_API_KEY_HERE"; // key for Google API
-var googleSheetID = "INSTER_GOOGLE_SHEET_ID_HERE"; // sheet ID for Google sheet containing Instagram API key
+var googleSheetID = "INSTERT_GOOGLE_SHEET_ID_HERE"; // sheet ID for Google sheet containing Instagram API key
 var googleURL = "https://sheets.googleapis.com/v4/spreadsheets/" + googleSheetID + "/values/'BCLL'!A:B?key=" + googleKey; // in getToken() - request URL to Google API
 
 var fields = 'id,caption,media_type,media_url,timestamp,permalink'; // query fields
@@ -85,6 +85,7 @@ function callAPI(url, callback) {
         error: function(e) {
             console.log("request failed");
             console.log(e);
+            callback({});
         }
 
     }).done(function(response) {
@@ -96,35 +97,38 @@ function callAPI(url, callback) {
 function callbackAPI(results) {
 
     // append results array to existing posts array
-    post_list = [ ...post_list, ...results.data ];
+    if (results.data) {
+        post_list = [ ...post_list, ...results.data ];
 
-    // if "next" url exists, set that as request_url and send another ajax request
-    if (results.paging.next && tally < req_limit) {
-        request_url = results.paging.next;
-        callAPI(request_url, callbackAPI);
-
-    } else {
-
-        // post_list now contains an array of all post objects
-        console.log('post requests finished - ' + tally + ' initial requests');
-        
-        // iterate through post list
-        for (i=0; i < post_list.length; i++) {
-
-            // if post is tagged as a carousel
-            if (post_list[i].media_type === 'CAROUSEL_ALBUM') {
-                // make post-specific request url
-                request_url = 'https://graph.instagram.com/' + post_list[i].id + '/children?fields=' + child_fields + '&access_token=' + token;
-                // then run ajax request to add child data to parent object
-                callbackChild(i); 
-            }
-        } 
-
-        // wait for all Promises to resolve before sending to page builder
-        Promise.allSettled(childPromises).then((success) => {
-            pageBuild(post_list);
-        });
+        // if "next" url exists, set that as request_url and send another ajax request (and end function)
+        if (results.paging.next && tally < req_limit) {
+            request_url = results.paging.next;
+            callAPI(request_url, callbackAPI);
+            return
+        }
     }
+
+    // continue if (1) there is no next page or (2) there was an error that failed to return anything
+    
+    // post_list now contains an array of all post objects
+    console.log('post requests finished - ' + tally + ' initial requests');
+    
+    // iterate through post list
+    for (i=0; i < post_list.length; i++) {
+
+        // if post is tagged as a carousel
+        if (post_list[i].media_type === 'CAROUSEL_ALBUM') {
+            // make post-specific request url
+            request_url = 'https://graph.instagram.com/' + post_list[i].id + '/children?fields=' + child_fields + '&access_token=' + token;
+            // then run ajax request to add child data to parent object
+            callbackChild(i); 
+        }
+    } 
+
+    // wait for all Promises to resolve before sending to page builder
+    Promise.allSettled(childPromises).then((success) => {
+        pageBuild(post_list);
+    });
 }
 
 // CALLBACK FUNCTION: callback to store child image data within the parent post object
