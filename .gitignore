@@ -1,0 +1,2 @@
+# ignore production folder - that includes sensitive info like api keys
+production/
